@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,8 @@ import java.util.List;
 public class Employee extends User{
 
     private String cargo;
-    private Double salary;
+    private LocalDate dateStart;
+    private Float salary;
     @OneToMany(mappedBy = "employee")
     List<Liquidation> liquidations = new ArrayList<>();
 }

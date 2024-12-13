@@ -9,6 +9,9 @@ import com.example.financialCalculator.repository.ILiquidationRepository;
 import com.example.financialCalculator.service.ILiquidationService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 @Service
 public class LiquidationService implements ILiquidationService {
 
@@ -30,22 +33,23 @@ public class LiquidationService implements ILiquidationService {
             Liquidation liquidation = mapToEntity(requestLiquidationDTO);
             liquidation.setEmployee(employee);
 
-        Double proportionalSalary = salaryProportional(employee.getSalary(),liquidation.getDayWorking());
-        Double proportionalVacation = vacationProportional(liquidation.getEmployee().getSalary(),liquidation.getRemainingVacationDays());
-        Double bonus = requestLiquidationDTO.getBonus();
-        Double compensation = requestLiquidationDTO.getCompensation();
+        Float proportionalSalary = salaryProportional(employee.getSalary(),liquidation.getDayWorking());
+        Float proportionalVacation = vacationProportional(liquidation.getEmployee().getSalary(),liquidation.getRemainingVacationDays());
+        Float bonus = requestLiquidationDTO.getBonus();
+        Float compensation = requestLiquidationDTO.getCompensation();
 
         liquidation.setLiquidationProportional(proportionalSalary);
         liquidation.setVacationProportional(proportionalVacation);
         liquidation.setSalaryProportional(proportionalSalary);
 
-        Double liquidationTotal = proportionalSalary + proportionalVacation + bonus + compensation;
+        Float liquidationTotal = proportionalSalary + proportionalVacation + bonus + compensation;
 
         liquidation.setLiquidationProportional(liquidationTotal);
-
+        liquidation.setDateLiquidation(LocalDate.now());
             this.liquidationRepository.save(liquidation);
 
             ResponseLiquidationDTO responseLiquidationDTO = new ResponseLiquidationDTO();
+
 
         return mapToDto(liquidation);
     }
@@ -81,14 +85,14 @@ public class LiquidationService implements ILiquidationService {
     }
 
 
-    private Double salaryProportional(Double salary,Integer dayWorking){
-        Double calculateSalary = (salary/30)*dayWorking;
+    private Float salaryProportional(Float salary,Integer dayWorking){
+        Float calculateSalary = (salary/30)*dayWorking;
         return calculateSalary;
 
     }
 
-    private Double vacationProportional(Double salary,Integer pendingVacationDays){
-        Double calculateVacation = (salary/30)*pendingVacationDays;
+    private Float vacationProportional(Float salary,Integer pendingVacationDays){
+        Float calculateVacation = (salary/30)*pendingVacationDays;
         return calculateVacation;
 
     }

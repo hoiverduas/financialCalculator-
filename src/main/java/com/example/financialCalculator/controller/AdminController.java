@@ -1,6 +1,5 @@
 package com.example.financialCalculator.controller;
 
-import com.example.financialCalculator.dto.userDto.LoginRequest;
 import com.example.financialCalculator.entities.Admin;
 import com.example.financialCalculator.service.imple.AdminService;
 import org.springframework.http.HttpStatus;

@@ -11,7 +11,5 @@ public interface IUserService {
     User findUserById(Long id);
     User updateUser(User user);
     void deleteUserById(Long id);
-    Boolean longinPasswordAndEmail(String password, String email);
-    Boolean loginPasswordAndUsername(String password, String username);
 
 }

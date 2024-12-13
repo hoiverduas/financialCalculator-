@@ -1,4 +1,4 @@
-package com.example.financialCalculator.dto.liquidationDto;
+package com.example.financialCalculator.dto.userDto;
 
 import lombok.Data;
 
@@ -13,9 +13,9 @@ public class ResponseLiquidationDTO {
     private Integer remainingVacationDays;
     private Float compensation;
     private Float Bonus;
-    private Long userId;
     private Float salaryProportional;
     private Float vacationProportional;
     private Float liquidationProportional;
     private LocalDate dateLiquidation;
+
 }

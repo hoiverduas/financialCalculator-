@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -18,11 +21,13 @@ public class Liquidation {
     private Long id;
     private Integer dayWorking;
     private Integer remainingVacationDays;
-    private Double compensation;
-    private Double Bonus;
-    private Double salaryProportional;
-    private Double vacationProportional;
-    private Double liquidationProportional;
+    private LocalDate dateLiquidation;
+    private Float compensation;
+    private Float Bonus;
+    private Float salaryProportional;
+    private Float vacationProportional;
+    private Float liquidationProportional;
+
 
     @ManyToOne
     private Employee employee;

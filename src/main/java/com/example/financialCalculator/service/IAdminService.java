@@ -12,5 +12,6 @@ public interface IAdminService {
     Admin findAdminById(Long id);
     Admin updateAdmin(Admin admin);
     void deleteAdminById(Long id);
-
+    Boolean longinPasswordAndEmail(String password, String email);
+    Boolean loginPasswordAndUsername(String password, String username);
 }

@@ -14,6 +14,9 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Admin extends User{
 
+    private String username;
+    private String email;
+    private String password;
     @Enumerated(EnumType.STRING)
     private AreaOfResponsibility areaOfResponsibility;
 

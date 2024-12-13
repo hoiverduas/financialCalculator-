@@ -1,43 +1,46 @@
 package com.example.financialCalculator.controller;
 
-import com.example.financialCalculator.dto.userDto.LoginRequest;
-import com.example.financialCalculator.service.imple.UserService;
+import com.example.financialCalculator.dto.userDto.LoginRequestDTO;
+import com.example.financialCalculator.service.imple.AdminService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/auth")
+//@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
-    private final UserService userService;
+    private final AdminService adminService;
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
+    public AuthController(AdminService adminService) {
+        this.adminService = adminService;
     }
 
+
     @PostMapping
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequest) {
 
         Boolean isValid = false;
 
         // Verificar si el valor ingresado es un correo electrónico o un nombre de usuario
         if (loginRequest.getPassword() != null) {
             if (isEmail(loginRequest.getUsername())) {
-                // Si es un correo, validar con email y contraseña
-                isValid = userService.longinPasswordAndEmail(loginRequest.getUsername(), loginRequest.getPassword());
+                isValid = adminService.longinPasswordAndEmail(loginRequest.getUsername(), loginRequest.getPassword());
             } else {
-                // Si no es un correo, validar con username y contraseña
-                isValid = userService.loginPasswordAndUsername(loginRequest.getUsername(), loginRequest.getPassword());
+                isValid = adminService.loginPasswordAndUsername(loginRequest.getUsername(), loginRequest.getPassword());
             }
         }
 
         if (isValid) {
+            System.out.println("loginRequest = " + loginRequest);
+            System.out.println("isValid = " + isValid);
             return ResponseEntity.ok("Login successful");
+
+
         } else {
+            System.out.println("loginRequest = " + loginRequest);
+            System.out.println("isValid = " + isValid);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
     }

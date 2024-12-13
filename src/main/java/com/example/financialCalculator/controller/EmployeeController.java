@@ -1,5 +1,6 @@
 package com.example.financialCalculator.controller;
 
+import com.example.financialCalculator.dto.userDto.ResponseEmployeeDTO;
 import com.example.financialCalculator.entities.Admin;
 import com.example.financialCalculator.entities.Employee;
 import com.example.financialCalculator.service.imple.EmployeeService;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/employees")
+//@CrossOrigin(origins = "http://localhost:5173")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -30,7 +32,7 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Employee>> getAllAdmin(){
+    public ResponseEntity<List<ResponseEmployeeDTO>> getAllAdmin(){
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.employeeService.findAllEmployee());

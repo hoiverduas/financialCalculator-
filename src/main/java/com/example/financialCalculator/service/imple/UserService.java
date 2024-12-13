@@ -44,9 +44,7 @@ public class UserService implements IUserService {
             User existUser = optionalUser.get();
 
             existUser.setId(user.getId());
-            existUser.setEmail(user.getEmail());
             existUser.setPhone(user.getPhone());
-            existUser.setPassword(user.getPassword());
             existUser.setFullName(user.getFullName());
 
             this.userRepository.save(existUser);
@@ -64,13 +62,5 @@ public class UserService implements IUserService {
 
     }
 
-    @Override
-    public Boolean longinPasswordAndEmail(String email, String password) {
-        return this.userRepository.existsByEmailAndPassword(email,password);
-    }
 
-    @Override
-    public Boolean loginPasswordAndUsername(String username, String password) {
-        return this.userRepository.existsByUsernameAndPassword(username,password);
-    }
 }

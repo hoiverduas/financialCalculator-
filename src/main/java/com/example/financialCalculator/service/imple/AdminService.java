@@ -61,6 +61,15 @@ public class AdminService implements IAdminService {
        this.adminRepository.deleteById(id);
     }
 
+    @Override
+    public Boolean longinPasswordAndEmail(String email, String password) {
+        return this.adminRepository.existsByEmailAndPassword(email,password);
+    }
+
+    @Override
+    public Boolean loginPasswordAndUsername(String username, String password) {
+        return this.adminRepository.existsByUsernameAndPassword(username,password);
+    }
 
 
 
