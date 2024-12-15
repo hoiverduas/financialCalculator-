@@ -1,7 +1,10 @@
 package com.example.financialCalculator.service.imple;
 
 import com.example.financialCalculator.entities.Admin;
+import com.example.financialCalculator.exception.UserAlreadyExistsException;
+import com.example.financialCalculator.exception.UserNotFound;
 import com.example.financialCalculator.repository.IAdminRepository;
+import com.example.financialCalculator.repository.IUserRepository;
 import com.example.financialCalculator.service.IAdminService;
 import org.springframework.stereotype.Service;
 
@@ -12,15 +15,25 @@ import java.util.Optional;
 public class AdminService implements IAdminService {
 
     private final IAdminRepository adminRepository;
+    private final IUserRepository userRepository;
 
-    public AdminService(IAdminRepository adminRepository) {
+    public AdminService(IAdminRepository adminRepository, IUserRepository userRepository) {
         this.adminRepository = adminRepository;
+        this.userRepository = userRepository;
     }
 
 
     @Override
-    public Admin createAdmin(Admin admin) {
-        return this.adminRepository.save(admin);
+    public Admin createAdmin(Admin admin) throws UserAlreadyExistsException {
+
+        Boolean existAdmin = userRepository.existsByNumIdentification(admin.getNumIdentification());
+
+        if(existAdmin){
+            throw new UserAlreadyExistsException("Admin with this identification already exists");
+        }else {
+            return this.adminRepository.save(admin);
+        }
+
     }
 
     @Override
@@ -29,9 +42,9 @@ public class AdminService implements IAdminService {
     }
 
     @Override
-    public Admin findAdminById(Long id) {
+    public Admin findAdminById(Long id) throws UserNotFound {
         return this.adminRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("not found"));
+                .orElseThrow(()->new UserNotFound("not found"));
     }
 
     @Override
@@ -56,7 +69,7 @@ public class AdminService implements IAdminService {
     }
 
     @Override
-    public void deleteAdminById(Long id) {
+    public void deleteAdminById(Long id) throws UserNotFound {
        findAdminById(id);
        this.adminRepository.deleteById(id);
     }

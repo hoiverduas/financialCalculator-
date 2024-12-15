@@ -4,12 +4,13 @@ import com.example.financialCalculator.dto.liquidationDto.RequestLiquidationDTO;
 import com.example.financialCalculator.dto.liquidationDto.ResponseLiquidationDTO;
 import com.example.financialCalculator.entities.Employee;
 import com.example.financialCalculator.entities.Liquidation;
+import com.example.financialCalculator.exception.UserNotFound;
 import com.example.financialCalculator.repository.IEmployeeRepository;
 import com.example.financialCalculator.repository.ILiquidationRepository;
 import com.example.financialCalculator.service.ILiquidationService;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
+
 import java.time.LocalDate;
 
 @Service
@@ -25,10 +26,10 @@ public class LiquidationService implements ILiquidationService {
 
 
     @Override
-    public ResponseLiquidationDTO createLiquidation(RequestLiquidationDTO requestLiquidationDTO) {
+    public ResponseLiquidationDTO createLiquidation(RequestLiquidationDTO requestLiquidationDTO) throws UserNotFound {
 
             Long userId = requestLiquidationDTO.getUserId();
-            Employee employee =  employeeRepository.findById(userId).orElseThrow(()->new RuntimeException("not found"));
+            Employee employee =  employeeRepository.findById(userId).orElseThrow(()->new UserNotFound("not found"));
 
             Liquidation liquidation = mapToEntity(requestLiquidationDTO);
             liquidation.setEmployee(employee);
@@ -58,7 +59,7 @@ public class LiquidationService implements ILiquidationService {
     private ResponseLiquidationDTO mapToDto(Liquidation liquidation){
 
         ResponseLiquidationDTO responseLiquidationDTO = new ResponseLiquidationDTO();
-        responseLiquidationDTO.setId(liquidation.getId());
+        responseLiquidationDTO.setIdLiquidation(liquidation.getId());
         responseLiquidationDTO.setBonus(liquidation.getBonus());
         responseLiquidationDTO.setCompensation(liquidation.getCompensation());
         responseLiquidationDTO.setDayWorking(liquidation.getDayWorking());

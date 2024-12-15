@@ -2,6 +2,7 @@ package com.example.financialCalculator.controller;
 
 import com.example.financialCalculator.dto.liquidationDto.RequestLiquidationDTO;
 import com.example.financialCalculator.dto.liquidationDto.ResponseLiquidationDTO;
+import com.example.financialCalculator.exception.UserNotFound;
 import com.example.financialCalculator.service.imple.LiquidationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class LiquidationController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseLiquidationDTO> createLiquidation(@RequestBody RequestLiquidationDTO requestLiquidationDTO){
+    public ResponseEntity<ResponseLiquidationDTO> createLiquidation(@RequestBody RequestLiquidationDTO requestLiquidationDTO) throws UserNotFound {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.liquidationService.createLiquidation(requestLiquidationDTO));

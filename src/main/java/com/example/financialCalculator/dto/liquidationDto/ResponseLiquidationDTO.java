@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Data
 public class ResponseLiquidationDTO {
 
-    private Long id;
+    private Long idLiquidation;
     private Integer dayWorking;
     private Integer remainingVacationDays;
     private Float compensation;

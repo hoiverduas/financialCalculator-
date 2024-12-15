@@ -2,13 +2,12 @@ package com.example.financialCalculator.dto.userDto;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-public class ResponseLiquidationDTO {
+public class ResponseLiquidationUserDTO {
 
-    private Long id;
+    private Long idLiquidation;
     private Integer dayWorking;
     private Integer remainingVacationDays;
     private Float compensation;

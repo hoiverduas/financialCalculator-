@@ -1,10 +1,14 @@
 package com.example.financialCalculator.service.imple;
 
+import com.example.financialCalculator.dto.userDto.RequestUpdateDTO;
 import com.example.financialCalculator.dto.userDto.ResponseEmployeeDTO;
-import com.example.financialCalculator.dto.userDto.ResponseLiquidationDTO;
+import com.example.financialCalculator.dto.userDto.ResponseLiquidationUserDTO;
 import com.example.financialCalculator.entities.Employee;
 import com.example.financialCalculator.entities.Liquidation;
+import com.example.financialCalculator.exception.UserAlreadyExistsException;
+import com.example.financialCalculator.exception.UserNotFound;
 import com.example.financialCalculator.repository.IEmployeeRepository;
+import com.example.financialCalculator.repository.IUserRepository;
 import com.example.financialCalculator.service.IEmployeeService;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +21,24 @@ import java.util.stream.Collectors;
 public class EmployeeService implements IEmployeeService {
 
     private final IEmployeeRepository employeeRepository;
+    private final IUserRepository userRepository;
 
-    public EmployeeService(IEmployeeRepository employeeRepository) {
+    public EmployeeService(IEmployeeRepository employeeRepository, IUserRepository userRepository) {
         this.employeeRepository = employeeRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public Employee createEmployee(Employee employee) {
-        employee.setDateStart(LocalDate.now());
-        return this.employeeRepository.save(employee);
+    public Employee createEmployee(Employee employee) throws UserAlreadyExistsException {
+
+        Boolean employeeExist =  userRepository.existsByNumIdentification(employee.getNumIdentification());
+         if (employeeExist){
+             throw new UserAlreadyExistsException("Employee with this identification already exists");
+         }else {
+             employee.setDateStart(LocalDate.now());
+             return this.employeeRepository.save(employee);
+         }
+
     }
 
     @Override
@@ -38,25 +51,29 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
-    public Employee findEmployeeById(Long id) {
-        return this.employeeRepository.findById(id).orElseThrow(()->new RuntimeException("not found"));
+    public Employee findEmployeeById(Long id) throws UserNotFound {
+        return this.employeeRepository.findById(id).orElseThrow(()->new UserNotFound("not found"));
     }
 
     @Override
-    public Employee updateEmployee(Employee employee) {
+    public ResponseEmployeeDTO updateEmployee(RequestUpdateDTO requestUpdateDTO) {
 
-        Optional<Employee>optionalEmployee = employeeRepository.findById(employee.getId());
+        Optional<Employee>optionalEmployee = employeeRepository.findById(requestUpdateDTO.getId());
 
         if (optionalEmployee.isPresent()){
 
             Employee existEmployee = optionalEmployee.get();
 
-            existEmployee.setCargo(employee.getCargo());
-            existEmployee.setSalary(employee.getSalary());
-            existEmployee.setFullName(employee.getFullName());
-            existEmployee.setPhone(employee.getPhone());
+            existEmployee.setCargo(requestUpdateDTO.getCargo());
+            existEmployee.setSalary(requestUpdateDTO.getSalary());
+            existEmployee.setFullName(requestUpdateDTO.getFullName());
+            existEmployee.setPhone(requestUpdateDTO.getPhone());
 
-            return this.employeeRepository.save(existEmployee);
+            this.employeeRepository.save(existEmployee);
+
+
+            return mapToResponseEmployeeDTO(existEmployee);
+
         }else {
             throw new RuntimeException("not found");
         }
@@ -65,7 +82,7 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
-    public void deleteEmployeeById(Long id) {
+    public void deleteEmployeeById(Long id) throws UserNotFound {
            findEmployeeById(id);
            this.employeeRepository.deleteById(id);
     }
@@ -77,6 +94,7 @@ public class EmployeeService implements IEmployeeService {
         responseEmployeeDTO.setId(employee.getId());
         responseEmployeeDTO.setCargo(employee.getCargo());
         responseEmployeeDTO.setFullName(employee.getFullName());
+        responseEmployeeDTO.setNumIdentification(employee.getNumIdentification());
         responseEmployeeDTO.setSalary(employee.getSalary());
         responseEmployeeDTO.setPhone(employee.getPhone());
         responseEmployeeDTO.setDateStart(employee.getDateStart());
@@ -87,11 +105,11 @@ public class EmployeeService implements IEmployeeService {
         return responseEmployeeDTO;
     }
 
-    private ResponseLiquidationDTO mapToResponseLiquidationDTO(Liquidation liquidation) {
+    private ResponseLiquidationUserDTO mapToResponseLiquidationDTO(Liquidation liquidation) {
 
-        ResponseLiquidationDTO responseLiquidationDTO = new ResponseLiquidationDTO();
+        ResponseLiquidationUserDTO responseLiquidationDTO = new ResponseLiquidationUserDTO();
 
-        responseLiquidationDTO.setId(liquidation.getId());
+        responseLiquidationDTO.setIdLiquidation(liquidation.getId());
         responseLiquidationDTO.setBonus(liquidation.getBonus());
         responseLiquidationDTO.setCompensation(liquidation.getCompensation());
         responseLiquidationDTO.setLiquidationProportional(liquidation.getLiquidationProportional());
@@ -104,5 +122,18 @@ public class EmployeeService implements IEmployeeService {
     }
 
 
+    private Employee mapToRequestUpdateDto(RequestUpdateDTO requestUpdateDTO) {
 
+        Employee employee = new Employee();
+
+        employee.setId(requestUpdateDTO.getId());
+        employee.setCargo(requestUpdateDTO.getCargo());
+        employee.setFullName(requestUpdateDTO.getFullName());
+        employee.setSalary(requestUpdateDTO.getSalary());
+        employee.setPhone(requestUpdateDTO.getPhone());
+        employee.setNumIdentification(requestUpdateDTO.getNumIdentification());
+        employee.setDateStart(requestUpdateDTO.getDateStart());
+
+        return employee;
+    }
 }

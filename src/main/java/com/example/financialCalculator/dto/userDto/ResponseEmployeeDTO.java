@@ -1,11 +1,8 @@
 package com.example.financialCalculator.dto.userDto;
 
-import com.example.financialCalculator.entities.Liquidation;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 @Data
@@ -15,7 +12,8 @@ public class ResponseEmployeeDTO {
     private String fullName;
     private String phone;
     private String cargo;
+    private String numIdentification;
     private Float salary;
     private LocalDate dateStart;
-    List<ResponseLiquidationDTO> liquidationDTOS ;
+    List<ResponseLiquidationUserDTO> liquidationDTOS ;
 }
