@@ -2,6 +2,7 @@ package com.example.financialCalculator.entities;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -19,12 +20,12 @@ public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message = "El campo no puede estar vacío")
     private String fullName;
+    @NotBlank(message = "El campo no puede estar vacío")
     private String phone;
+    @NotBlank(message = "El campo no puede estar vacío")
     private String numIdentification;
-
-
-
 
 
 }

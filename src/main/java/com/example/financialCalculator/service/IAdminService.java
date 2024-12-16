@@ -4,6 +4,7 @@ import com.example.financialCalculator.entities.Admin;
 import com.example.financialCalculator.entities.User;
 import com.example.financialCalculator.exception.UserAlreadyExistsException;
 import com.example.financialCalculator.exception.UserNotFound;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
